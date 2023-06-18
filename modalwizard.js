@@ -13,9 +13,10 @@ class Modal {
         if (this.current_page < this.pages.length - 1) {
             let old_page = this.current_page;
             let new_page = ++this.current_page;
+            // check if we need to validate this page
             if (typeof this.pages[old_page].validation_callback == "function") {
                 if (!this.pages[old_page].validation_callback()) {
-                    console.log("validation failed");
+                    // validation failed
                     this.current_page--;
                     return;
                 }
@@ -67,6 +68,15 @@ class Modal {
             page.clear();
         }
     }
+
+    /**
+     * Gets the current page of the modal, starting at 0.
+     *
+     * @returns the current page index as integer
+     */
+    get_current_page() {
+        return this.current_page;
+    }
 }
 
 class Page {
@@ -94,6 +104,7 @@ class Page {
     clear() {
         for (let input in this.inputs) {
             this.inputs[input].value = "";
+            this.inputs[input].checked = false;
         }
     }
 
@@ -118,13 +129,19 @@ class Page {
     }
 }
 
-// returns a dictionary with modal names as keys and modal objects as values
+/**
+ * Initializes one or more modals on an HTML page. Takes the names of the modal HTML elements as arguments and returns
+ * a dictionary with modal names as keys and modal objects as values.
+ *
+ * @param {*} args List of modal HTML elements, e.g. ['modal1', 'modal2']
+ * @returns a dictionary containing the modals
+ */
 function initModals(args) {
     let modals = new Object();
     for (let modal of args) {
         let modal_id = document.getElementById(modal);
         if (modal_id === null) {
-            printerr("modal " + modal + " not found, skipping");
+            console.error("modalwizard.js: modal " + modal + " not found, skipping");
         } else {
             let modal_obj = initModal(modal);
             modals[modal] = modal_obj;
@@ -134,7 +151,6 @@ function initModals(args) {
 }
 
 function initModal(modal) {
-    print("init modal " + modal);
     let modal_id = document.getElementById(modal);
     let modal_obj = new Modal(modal_id);
 
@@ -160,7 +176,6 @@ function initModal(modal) {
         idx++;
     }
     let n_pages = idx - 1;
-    print("pages for modal " + modal + " found: " + n_pages);
 
     // get buttons
     for (let i = 1; i < n_pages + 1; i++) {
@@ -197,12 +212,4 @@ function initModal(modal) {
         }
     }
     return modal_obj;
-}
-
-function print(a) {
-    console.log("modalwizard.js info: " + a);
-}
-
-function printerr(a) {
-    console.error("modalwizard.js ERR: " + a);
 }

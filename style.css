@@ -1,9 +1,0 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer components {
-    .modal {
-        @apply flex flex-row py-8 px-8;
-    }
-}

@@ -9,13 +9,11 @@
     <body>
         <div class="flex flex-row py-8 px-8">
             <button
-                data-modal-target="modal1"
-                data-modal-toggle="modal1"
                 class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 type="button"
                 id="modal1_btn_open"
             >
-                Toggle modal
+                Show Modal Wizard
             </button>
         </div>
 
@@ -206,12 +204,16 @@
 
         <script type="text/javascript">
             window.onload = function () {
+                // first, initialize modal wizards
                 let modals = initModals(["modal1"]);
+                // hook a finish callback to modal1
                 modals["modal1"].finish_callback = function (data) {
                     console.log("modal1 finished with the following data: ");
+                    // data contains all input data from all pages
                     console.log(data);
                 };
 
+                // do some validation on first page
                 modals["modal1"].pages[0].validation_callback = function () {
                     let email_id = document.getElementById("email");
                     if (!email_id.value.includes("@")) {
