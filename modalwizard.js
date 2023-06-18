@@ -13,6 +13,13 @@ class Modal {
         if (this.current_page < this.pages.length - 1) {
             let old_page = this.current_page;
             let new_page = ++this.current_page;
+            if (typeof this.pages[old_page].validation_callback == "function") {
+                if (!this.pages[old_page].validation_callback()) {
+                    console.log("validation failed");
+                    this.current_page--;
+                    return;
+                }
+            }
             this.pages[old_page].hide();
             this.pages[new_page].show();
         }
